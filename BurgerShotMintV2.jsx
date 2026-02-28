@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
+const { useState, useEffect } = React;
 
-const BSHOT_PRICE = 0.001;
-
-export default function BurgerShotMint() {
+function BurgerShotMint() {
+  const BSHOT_PRICE = 0.001;
   const [connected, setConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState("");
   const [rBTCBalance, setRBTCBalance] = useState(0.11);
   const [displayBalance, setDisplayBalance] = useState(0.11); // 🎬 animated display value
   const [mintAmount, setMintAmount] = useState(1);
@@ -755,3 +753,5 @@ export default function BurgerShotMint() {
     </div>
   );
 }
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<BurgerShotMint />);
