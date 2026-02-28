@@ -557,7 +557,7 @@ function BurgerShotMint() {
               Built on OP_NET — Bitcoin's Smart Contract Layer
             </p>
             <p className="text-[10px]" style={{ fontFamily: "'Space Mono', monospace", color: th.mutedtext }}>
-              This is a demo UI. Connect a real OPWallet for mainnet use.
+              nyenyenye
             </p>
           </div>
         </div>
