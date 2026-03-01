@@ -55,37 +55,37 @@ const updateBalance = async () => {
   };
 
   const handleConnect = async () => {
+    // 1. Reset status biar nggak kontradiksi
     setLoadingState(p => ({ ...p, connecting: true }));
+    
     try {
-      // Kita cek satu-satu: window.opwallet dulu, baru window.opnet sebagai cadangan
       const provider = window.opwallet || window.opnet;
 
-      if (typeof provider !== 'undefined') {
-        console.log("Wallet ditemukan!", provider);
-        
-        // Minta ijin konek akun
+      if (provider) {
+        // 2. Minta akun secara eksplisit
         const accounts = await provider.requestAccounts();
         
         if (accounts && accounts.length > 0) {
-          setConnected(true);
+          // 3. BARU SET CONNECTED JADI TRUE DI SINI
           setWalletAddress(accounts[0]);
+          setConnected(true); 
           
-          // Update saldo pake provider yang ketemu
+          // 4. Tarik saldo pake provider yang aktif
           const res = await provider.getBalance();
           const realVal = parseFloat(res.confirmed / 100000000);
           setRBTCBalance(realVal);
           setDisplayBalance(realVal);
           
-          addToast({ type: "success", title: "Welcome to BurgerShot!" });
+          addToast({ type: "success", title: "Wallet Connected!", mintAmt: 0 });
+          console.log("Koneksi Sukses:", accounts[0]);
         }
       } else {
-        // Kalau beneran ga ada, lempar ke link yang kamu kasih tadi
-        alert("OPWallet tidak terdeteksi! Mengalihkan ke Chrome Store...");
+        alert("OPWallet tidak ditemukan! Pastikan sudah terinstall.");
         window.open('https://chromewebstore.google.com/detail/opwallet/pmbjpcmaaladnfpacpmhmnfmpklgbdjb', '_blank');
       }
     } catch (e) {
-      console.error("Gagal konek:", e);
-      addToast({ type: "error", title: "Connection Rejected" });
+      console.error("User membatalkan koneksi atau error:", e);
+      setConnected(false); // Pastikan balik jadi false kalau gagal
     } finally {
       setLoadingState(p => ({ ...p, connecting: false }));
     }
@@ -149,20 +149,33 @@ const updateBalance = async () => {
 
         {/* MAIN MINT CARD (Sesuai Screenshot) */}
         <div style={{ background: th.card, width: "100%", maxWidth: "480px", borderRadius: "28px", padding: "30px", border: `1px solid ${th.border}`, backdropFilter: "blur(20px)", boxShadow: "0 40px 100px rgba(0,0,0,0.6)" }}>
-          
           {/* WALLET DISPLAY */}
-          <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "18px", padding: "18px", marginBottom: "25px", border: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <div style={{ fontSize: "22px", opacity: 0.6 }}>🛡️</div>
-              <div>
-                <p style={{ fontSize: "10px", color: th.sub, margin: 0, fontWeight: "bold" }}>CONNECTED</p>
-                <p style={{ fontSize: "13px", fontWeight: "bold", margin: 0, fontFamily: "monospace", color: "#dd9f5f" }}>{connected ? `${walletAddress.slice(0,8)}...${walletAddress.slice(-6)}` : "Not Connected"}</p>
-              </div>
-            </div>
-            {connected && <button style={{ background: "rgba(255,0,0,0.1)", color: "#ff5555", border: "1px solid rgba(255,0,0,0.2)", padding: "4px 10px", borderRadius: "8px", fontSize: "10px", fontWeight: "bold" }}>[• Disconnect]</button>}
-          </div>
+<div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "18px", padding: "18px", marginBottom: "25px", border: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+  <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+    <div style={{ fontSize: "22px", opacity: 0.6 }}>🛡️</div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <p style={{ fontSize: "10px", color: th.sub, margin: 0, fontWeight: "bold", lineHeight: "1" }}>
+        {connected ? "CONNECTED" : "WALLET STATUS"}
+      </p>
+      <p style={{ fontSize: "13px", fontWeight: "bold", margin: 0, fontFamily: "monospace", color: "#dd9f5f", lineHeight: "1.4" }}>
+        {connected ? `${walletAddress.slice(0,8)}...${walletAddress.slice(-6)}` : "Not Connected"}
+      </p>
+    </div>
+  </div> {/* <--- PENUTUP GRUP INFO (HARUS DI SINI) */}
 
-          {/* BALANCE BOX */}
+  {!connected ? (
+    <button onClick={handleConnect} style={{ background: "#dd9f5f", border: "none", padding: "8px 16px", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", color: "black", fontSize: "12px" }}>
+      Connect
+    </button>
+  ) : (
+    <button onClick={() => setConnected(false)} style={{ background: "rgba(255,0,0,0.1)", color: "#ff5555", border: "1px solid rgba(255,0,0,0.2)", padding: "4px 10px", borderRadius: "8px", fontSize: "10px", fontWeight: "bold", cursor: "pointer" }}>
+      [• Disconnect]
+    </button>
+  )}
+</div> {/* <--- PENUTUP UTAMA */}
+
+{/* BALANCE BOX */}
+<div style={{ marginBottom: "30px", padding: "0 10px" }}>
           <div style={{ marginBottom: "30px", padding: "0 10px" }}>
             <p style={{ fontSize: "12px", color: th.sub, marginBottom: "10px", fontWeight: "bold" }}>TBTC BALANCE</p>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
