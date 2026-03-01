@@ -33,16 +33,20 @@ function BurgerShotMint() {
   };
 
   // --- REAL BALANCE LOGIC ---
-  const updateBalance = async () => {
-    if (window.opnet) {
-      try {
-        const res = await window.opnet.getBalance();
-        const realVal = parseFloat(res.confirmed / 100000000);
-        setRBTCBalance(realVal);
-        setDisplayBalance(realVal);
-      } catch (e) { console.error(e); }
+const updateBalance = async () => {
+  const provider = window.opwallet || window.opnet; 
+  if (provider) {
+    try {
+      // GANTI window.opnet JADI provider DI SINI
+      const res = await provider.getBalance(); 
+      const realVal = parseFloat(res.confirmed / 100000000);
+      setRBTCBalance(realVal);
+      setDisplayBalance(realVal);
+    } catch (e) { 
+      console.error("Gagal update saldo:", e); 
     }
-  };
+  }
+};
 
   const handleMax = () => {
     const max = Math.floor((rBTCBalance - GAS_RESERVE) / BSHOT_PRICE);
