@@ -3,12 +3,39 @@ const { useState, useEffect } = React;
 function BurgerShotMint() {
   const BSHOT_PRICE = 0.001;
   const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
   const [rBTCBalance, setRBTCBalance] = useState(0.11);
   const [displayBalance, setDisplayBalance] = useState(0.11); // 🎬 animated display value
   const [mintAmount, setMintAmount] = useState(1);
   const [slippage, setSlippage] = useState(2.5); // ✅ Default minimum 2.5%
   const [particles, setParticles] = useState([]);
-
+// --- Fungsi Baru buat Handle Koneksi Opnet ---
+  const handleConnect = async () => {
+    setConnecting(true); // <--- TAMBAH INI (Biar kursor jadi 'wait' & tombol disabled)
+    try {
+      // 1. Cek keberadaan provider Opnet
+      if (typeof window.opnet !== 'undefined') {
+        // 2. Request akun
+        const accounts = await window.opnet.requestAccounts();
+        if (accounts && accounts.length > 0) {
+          setConnected(true);
+          console.log("Connected to:", accounts[0]);
+          // Kamu bisa set balance asli di sini kalau mau fetch dari API nanti
+        }
+      } else {
+        // 3. Solusi Black Screen: Redirect ke tab baru
+        if (window.confirm("Opnet Wallet gak ketemu. Mau install dulu dari Chrome Store biar bisa mint?")) {
+          window.open(
+            'https://chromewebstore.google.com/detail/pmbjpcmaaladnfpacpmhmnfmpklgbdjb', 
+            '_blank', 
+            'noopener,noreferrer'
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Koneksi dibatalkan:", error);
+    }
+  };
   // ✅ Satu state terpusat untuk semua status loading
   const [loadingState, setLoadingState] = useState({
     connecting: false,  // saat menghubungkan wallet
