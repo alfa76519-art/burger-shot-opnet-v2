@@ -53,18 +53,38 @@ function BurgerShotMint() {
   const handleConnect = async () => {
     setLoadingState(p => ({ ...p, connecting: true }));
     try {
-      if (window.opnet) {
-        const accounts = await window.opnet.requestAccounts();
-        if (accounts?.length > 0) {
+      // Kita cek satu-satu: window.opwallet dulu, baru window.opnet sebagai cadangan
+      const provider = window.opwallet || window.opnet;
+
+      if (typeof provider !== 'undefined') {
+        console.log("Wallet ditemukan!", provider);
+        
+        // Minta ijin konek akun
+        const accounts = await provider.requestAccounts();
+        
+        if (accounts && accounts.length > 0) {
           setConnected(true);
           setWalletAddress(accounts[0]);
-          await updateBalance();
+          
+          // Update saldo pake provider yang ketemu
+          const res = await provider.getBalance();
+          const realVal = parseFloat(res.confirmed / 100000000);
+          setRBTCBalance(realVal);
+          setDisplayBalance(realVal);
+          
           addToast({ type: "success", title: "Welcome to BurgerShot!" });
         }
       } else {
-        window.open('https://chromewebstore.google.com/detail/pmbjpcmaaladnfpacpmhmnfmpklgbdjb', '_blank');
+        // Kalau beneran ga ada, lempar ke link yang kamu kasih tadi
+        alert("OPWallet tidak terdeteksi! Mengalihkan ke Chrome Store...");
+        window.open('https://chromewebstore.google.com/detail/opwallet/pmbjpcmaaladnfpacpmhmnfmpklgbdjb', '_blank');
       }
-    } finally { setLoadingState(p => ({ ...p, connecting: false })); }
+    } catch (e) {
+      console.error("Gagal konek:", e);
+      addToast({ type: "error", title: "Connection Rejected" });
+    } finally {
+      setLoadingState(p => ({ ...p, connecting: false }));
+    }
   };
 
   const handleMint = async () => {
