@@ -182,7 +182,8 @@ function BurgerShotMint() {
 
       // Baca balance tBTC dari wallet
       const balanceRaw = await window.opnet.getBalance();
-      const balance = parseFloat(balanceRaw) || 0;
+      const satoshi = balanceRaw?.confirmed || balanceRaw?.total || 0;
+      const balance = parseFloat((satoshi / 1e8).toFixed(8));
       setRBTCBalance(balance);
       setDisplayBalance(balance);
 
