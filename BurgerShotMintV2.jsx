@@ -1,4 +1,6 @@
-  function BurgerShotMint() {
+const { useState, useEffect } = React;
+
+function BurgerShotMint() {
     
   const BSHOT_PRICE = 0.001;
   const [connected, setConnected] = useState(false);
