@@ -1,4 +1,4 @@
-# 🍔 Burger Shot — $BSHOT Minting Page
+# 🍔 Burger Shot — $BSHOT Minting Page V2
 
 ![Network](https://img.shields.io/badge/Network-OP__NET%20Testnet-orange?style=for-the-badge)
 ![Build](https://img.shields.io/badge/Build-Live-brightgreen?style=for-the-badge)
