@@ -6,8 +6,8 @@ const BSHOT_PRICE = 0.001;
 function BurgerShotMint() {
   const [connected, setConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
-  const [rBTCBalance, setRBTCBalance] = useState(0.11);
-  const [displayBalance, setDisplayBalance] = useState(0.11); // 🎬 animated display value
+  const [rBTCBalance, setRBTCBalance] = useState(0);
+  const [displayBalance, setDisplayBalance] = useState(0); // 🎬 animated display value
   const [mintAmount, setMintAmount] = useState(1);
   const [slippage, setSlippage] = useState(2.5); // ✅ Default minimum 2.5%
   const [particles, setParticles] = useState([]);
