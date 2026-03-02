@@ -1,14 +1,13 @@
-const { useState, useEffect } = React;
+import { useState, useEffect } from "react";
 
 const BSHOT_PRICE = 0.001;
 
-// ✅ KEEP ini
-function BurgerShotMint() {
+export default function BurgerShotMint() {
   const [connected, setConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [rBTCBalance, setRBTCBalance] = useState(0);
   const [displayBalance, setDisplayBalance] = useState(0); // 🎬 animated display value
-  const [mintAmount, setMintAmount] = useState(1);
+  const [mintAmount, setMintAmount] = useState(0);
   const [slippage, setSlippage] = useState(2.5); // ✅ Default minimum 2.5%
   const [particles, setParticles] = useState([]);
 
@@ -180,8 +179,9 @@ function BurgerShotMint() {
       setConnected(true);
       setWalletAddress(address);
 
-      // Baca balance tBTC dari wallet
+      // Baca balance tBTC dari wallet — getBalance() returns satoshi object
       const balanceRaw = await window.opnet.getBalance();
+      // confirmed = satoshi, bagi 1e8 untuk dapat tBTC
       const satoshi = balanceRaw?.confirmed || balanceRaw?.total || 0;
       const balance = parseFloat((satoshi / 1e8).toFixed(8));
       setRBTCBalance(balance);
@@ -344,6 +344,9 @@ function BurgerShotMint() {
         @keyframes toast-in { from { opacity: 0; transform: translateX(110%); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(110%); } }
         .toast-enter { animation: toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
       `}</style>
 
       {/* Header */}
@@ -495,7 +498,21 @@ function BurgerShotMint() {
               </div>
               <div className="flex items-center gap-3">
                 <button onClick={() => setMintAmount(Math.max(1, mintAmount - 1))} className="w-10 h-10 rounded-lg font-bold text-lg flex items-center justify-center transition-all hover:scale-105" style={{ background: "rgba(221,159,95,0.1)", border: "1px solid rgba(221,159,95,0.2)", color: "#dd9f5f" }}>−</button>
-                <div className="flex-1 text-center text-2xl font-extrabold" style={{ fontFamily: "'Space Mono', monospace", color: th.text }}>{mintAmount}</div>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={mintAmount === 0 ? "" : mintAmount}
+                  placeholder="0"
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/[^0-9]/g, "");
+                    if (raw === "") { setMintAmount(0); return; }
+                    const val = parseInt(raw, 10);
+                    if (!isNaN(val)) setMintAmount(Math.min(100, val));
+                  }}
+                  className="flex-1 text-center text-2xl font-extrabold bg-transparent outline-none w-full"
+                  style={{ fontFamily: "'Space Mono', monospace", color: th.text }}
+                />
                 <button onClick={() => setMintAmount(Math.min(100, mintAmount + 1))} className="w-10 h-10 rounded-lg font-bold text-lg flex items-center justify-center transition-all hover:scale-105" style={{ background: "rgba(221,159,95,0.1)", border: "1px solid rgba(221,159,95,0.2)", color: "#dd9f5f" }}>+</button>
               </div>
 
@@ -804,5 +821,3 @@ function BurgerShotMint() {
     </div>
   );
 }
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<BurgerShotMint />);
