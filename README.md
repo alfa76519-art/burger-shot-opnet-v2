@@ -64,11 +64,11 @@
 | Property | Value |
 |---|---|
 | Name | Burger Shot |
-| Symbol | $BSHOT |
-| Network | OP_NET Testnet → Mainnet |
+| Symbol | $BGS |
+| Network | OP_NET Testnet → Mainnet maybe🤣 |
 | Price per token | 0.001 tBTC |
-| Max supply | 1,000,000 BSHOT |
-| Max per tx | 100 BSHOT |
+| Max supply | 21,000,000 BGS |
+| Max per tx | 100 BGS |
 
 ---
 ---
