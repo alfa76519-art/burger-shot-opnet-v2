@@ -7,11 +7,11 @@
 
 > Serving hot tokens on Bitcoin L1 🍔 — A fast-food themed token launchpad built on OP_NET's Bitcoin smart contract layer.
 
-🔗 **Live Demo:** [alfa76519-art.github.io/burger-shot-opnet-v2](https://alfa76519-art.github.io/burger-shot-opnet-v2)
+🔗 **~~Live Demo~~ Testnet Active ✅:** [alfa76519-art.github.io/burger-shot-opnet-v2](https://alfa76519-art.github.io/burger-shot-opnet-v2)
 
 ---
 
-## 📸 Preview
+## 📸 Preview (SOON)
 
 | Dark Mode | Light Mode |
 |---|---|
@@ -71,6 +71,18 @@
 | Max per tx | 100 BSHOT |
 
 ---
+---
+
+## 🍔 Featured Project: BurgerShot (BGS)
+**The Digital Evolution of the Bitcoin Pizza.**
+
+I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitcoin's history, on the **OP_NET** protocol.
+
+- **Genesis Goal**: To recreate the scarcity of Bitcoin (21M Supply) in a "Bitcoin Burger" format.
+- **Achievement**: Manual deployment via AssemblyScript without third-party intermediaries.
+- **Contract Address**: `opt1sqr76zvd5cnhtl93yhz0kdtqarnqt5vwt65e0nede`
+
+> *"If Pizza was the first transaction, BGS is the new standard of digital utility."*
 
 ## 🚀 Roadmap
 
@@ -79,10 +91,23 @@
 - [x] Toast notification system
 - [x] Real-time mint feed
 - [x] Dark/Light mode
-- [ ] Deploy $BSHOT smart contract on OP_NET Testnet
-- [ ] On-chain mint transactions
-- [ ] Mainnet launch
+- [x] Deploy $BSHOT smart contract on OP_NET Testnet
+- [x] On-chain mint transactions
+- [ ] Mainnet launch maybe🤣
+## 🚀 Roadmap & Achievements🏆
 
+- [x] **Phase 1: Genesis & Architecture**
+  - Successfully architected the BurgerShot (BGS) smart contract using AssemblyScript.
+  - Mirrored Bitcoin's scarcity model with a fixed supply of 21,000,000 BGS.
+- [x] **Phase 2: Ninja Deployment**
+  - Deployed the contract manually on the **OP_NET Testnet** via Codespace.
+  - Achieved deployment without third-party intermediaries (No-Bob execution).
+  - Verified contract address: `opt1sqr76zvd5cnhtl93yhz0kdtqarnqt5vwt65e0nede`.
+- [x] **Phase 3: Whale Acquisition**
+  - Successfully minted 100% of the supply (21M BGS) to the architect's wallet.
+- [ ] **Phase 4: Community & Ecosystem** (Next Step)
+  - Exploring integration for digital payments and community.
+  - Preparing for Challenge OP_NET.
 ---
 
 ## 🏗️ Project Structure
