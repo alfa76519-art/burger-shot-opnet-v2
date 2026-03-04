@@ -91,7 +91,7 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
 - [x] Toast notification system
 - [x] Real-time mint feed
 - [x] Dark/Light mode
-- [x] Deploy $BSHOT smart contract on OP_NET Testnet
+- [x] Deploy $BSHOT (BGS) smart contract on OP_NET Testnet
 - [x] On-chain mint transactions
 - [ ] Mainnet launch maybe🤣
 ## 🚀 Roadmap & Achievements🏆
@@ -103,8 +103,9 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
   - Deployed the contract manually on the **OP_NET Testnet** via Codespace.
   - Achieved deployment without third-party intermediaries (No-Bob execution).
   - Verified contract address: `opt1sqr76zvd5cnhtl93yhz0kdtqarnqt5vwt65e0nede`.
-- [x] **Phase 3: Whale Acquisition**
-  - Successfully minted 100% of the supply (21M BGS) to the architect's wallet.
+- [x] **Phase 3: Whale Acquisition & Distribution**
+  - Successfully minted 21,000,000 BGS to the architect's wallet.
+  - ✅ **Live Transaction Proof**: [View 1 BGS Transfer on OpScan](https://opscan.org/transactions/cfc7a0720d0b919e92091a27f241d8d73de91e64bd3165288859c370a7f21b29)
 - [ ] **Phase 4: Community & Ecosystem** (Next Step)
   - Exploring integration for digital payments and community.
   - Preparing for Challenge OP_NET.
