@@ -271,6 +271,15 @@ function BurgerShotMint() {
   const totalCost = (mintAmount * BSHOT_PRICE).toFixed(4);
   const canAfford = rBTCBalance >= parseFloat(totalCost);
 
+  // 🍔 Button label logic
+  const getButtonLabel = () => {
+    if (loadingState.minting) return "GRILLING... 🔥";
+    if (loadingState.connecting) return "ENTERING KITCHEN... 🚪";
+    if (!connected) return "ENTER SHOP 🛡️";
+    if (!canAfford) return "NOT ENOUGH CASH 💸";
+    return "PLACE ORDER! 🍔";
+  };
+
   return (
     <div style={{ fontFamily: "'Syne', sans-serif", background: th.bg, color: th.text, transition: "background 0.4s ease, color 0.3s ease" }} className="min-h-screen relative overflow-hidden">
       <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -383,7 +392,7 @@ function BurgerShotMint() {
               Mint <span className="shimmer-text">$BSHOT</span>
             </h1>
             <p className="text-sm text-white/40 max-w-xs mx-auto leading-relaxed">
-              The official token of the Burger Shot ecosystem on OP_NET's Bitcoin layer.
+              BurgerShot: Bleed Bitcoin, Eat Burgers. No Napkins Required.
             </p>
           </div>
 
@@ -616,16 +625,10 @@ function BurgerShotMint() {
                 boxShadow: connected && canAfford && !minting ? "0 0 24px rgba(221,159,95,0.3), 0 4px 16px rgba(0,0,0,0.4)" : "none",
               }}
             >
-              {minting ? (
-                <>
-                  <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-[#1a0e00]" style={{ animation: "spin-slow 0.8s linear infinite" }} />
-                  Minting...
-                </>
-              ) : (
-                <>
-                  🍔 Mint ${mintAmount > 1 ? `${mintAmount} ` : ""}$BSHOT
-                </>
+              {loadingState.minting && (
+                <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-[#1a0e00]" style={{ animation: "spin-slow 0.8s linear infinite" }} />
               )}
+              {getButtonLabel()}
             </button>
           </div>
 
@@ -658,7 +661,7 @@ function BurgerShotMint() {
                 <div className="flex items-center gap-2">
                   <span className="text-base">{toast.type === "success" ? "✅" : "❌"}</span>
                   <span className="text-sm font-bold" style={{ color: toast.type === "success" ? "#4ade80" : "#f87171" }}>
-                    {toast.type === "success" ? "Mint Successful!" : "Transaction Failed"}
+                    {toast.type === "success" ? "ORDER READY! 🍔" : "KITCHEN BUSY! ⚠️"}
                   </span>
                 </div>
                 <button onClick={() => removeToast(toast.id)} className="flex-shrink-0 opacity-40 hover:opacity-100 transition-opacity" style={{ color: th.subtext }}>
@@ -668,8 +671,8 @@ function BurgerShotMint() {
               {/* Body */}
               <p className="text-xs mb-3" style={{ color: th.subtext }}>
                 {toast.type === "success"
-                  ? <>Successfully minted <strong style={{ color: "#dd9f5f" }}>{toast.mintAmt} $BSHOT</strong>. Check your wallet.</>
-                  : "Transaction was rejected. Please try again."}
+                  ? "Your BSHOT burgers have been served to your wallet."
+                  : "The chef is tired or gas is high. Try again!"}
               </p>
               {/* TX ID + countdown — hanya untuk success */}
               {toast.type === "success" && toast.txId && (
