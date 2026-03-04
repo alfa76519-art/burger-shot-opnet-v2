@@ -1,8 +1,11 @@
 const { useState, useEffect } = React;
 
+// 🍔 BurgerShot BGS Contract — OP_NET Testnet
+const BGS_CONTRACT_ADDRESS = "opt1sqptc0qu5m4uvp5n0vcr2l2vyjuvh47xu5gxa7n6p";
+const OPNET_RPC = "https://testnet.opnet.org";
+const BSHOT_PRICE = 0.001;
+
 function BurgerShotMint() {
-    
-  const BSHOT_PRICE = 0.001;
   const [connected, setConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [rBTCBalance, setRBTCBalance] = useState(0);
@@ -99,7 +102,7 @@ function BurgerShotMint() {
     const maxBSHOT = Math.floor(availableBalance / BSHOT_PRICE);
 
     // Set mintAmount, batasi maksimal 100 (sesuai limit contract simulasi)
-    setMintAmount(Math.min(100, Math.max(1, maxBSHOT)));
+    setMintAmount(Math.min(1000, Math.max(1, maxBSHOT)));
   };
 
   const handleRefresh = async () => {
@@ -230,16 +233,19 @@ function BurgerShotMint() {
     setLoadingState((prev) => ({ ...prev, minting: true }));
     setMintStatus(null);
     try {
-      // Simulasi pemanggilan fungsi wallet / kontrak OP_NET
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulasi 90% sukses, 10% gagal (reject)
-          Math.random() > 0.1 ? resolve() : reject(new Error("Transaction rejected"));
-        }, 2200);
+      // ✅ REAL OP_NET CONTRACT CALL — publicMint
+      const provider = new window.opnet.Web3Provider(OPNET_RPC);
+      const contract = provider.getContract(BGS_CONTRACT_ADDRESS);
+
+      // Konversi amount ke u256 (18 decimals)
+      const amountU256 = BigInt(mintAmount) * BigInt("1000000000000000000");
+      const tx = await window.opnet.signAndBroadcastInteraction({
+        contractAddress: BGS_CONTRACT_ADDRESS,
+        method: "publicMint",
+        params: [amountU256.toString()],
       });
-      // ✅ BERHASIL — RACIKAN BARU DI SINI
-      // Kita buat TXID simulasi biar besok tinggal ganti ke TX asli
-      const mockTx = "0x" + Math.random().toString(16).slice(2, 14);
+      if (!tx) throw new Error("Transaction failed");
+      const mockTx = typeof tx === "string" ? tx : (tx.hash || tx.txid || tx.transactionId || "unknown");
       setLastTxId(mockTx);
       setMintStatus("success");
       setShowConfetti(true);
@@ -264,6 +270,15 @@ function BurgerShotMint() {
 
   const totalCost = (mintAmount * BSHOT_PRICE).toFixed(4);
   const canAfford = rBTCBalance >= parseFloat(totalCost);
+
+  // 🍔 Button label logic
+  const getButtonLabel = () => {
+    if (loadingState.minting) return "GRILLING... 🔥";
+    if (loadingState.connecting) return "ENTERING KITCHEN... 🚪";
+    if (!connected) return "ENTER SHOP 🛡️";
+    if (!canAfford) return "NOT ENOUGH CASH 💸";
+    return "PLACE ORDER! 🍔";
+  };
 
   return (
     <div style={{ fontFamily: "'Syne', sans-serif", background: th.bg, color: th.text, transition: "background 0.4s ease, color 0.3s ease" }} className="min-h-screen relative overflow-hidden">
@@ -377,7 +392,7 @@ function BurgerShotMint() {
               Mint <span className="shimmer-text">$BSHOT</span>
             </h1>
             <p className="text-sm text-white/40 max-w-xs mx-auto leading-relaxed">
-              The official token of the Burger Shot ecosystem on OP_NET's Bitcoin layer.
+              BurgerShot: Bleed Bitcoin, Eat Burgers. No Napkins Required.
             </p>
           </div>
 
@@ -508,17 +523,17 @@ function BurgerShotMint() {
                     const raw = e.target.value.replace(/[^0-9]/g, "");
                     if (raw === "") { setMintAmount(0); return; }
                     const val = parseInt(raw, 10);
-                    if (!isNaN(val)) setMintAmount(Math.min(100, val));
+                    if (!isNaN(val)) setMintAmount(Math.min(1000, val));
                   }}
                   className="flex-1 text-center text-2xl font-extrabold bg-transparent outline-none w-full"
                   style={{ fontFamily: "'Space Mono', monospace", color: th.text }}
                 />
-                <button onClick={() => setMintAmount(Math.min(100, mintAmount + 1))} className="w-10 h-10 rounded-lg font-bold text-lg flex items-center justify-center transition-all hover:scale-105" style={{ background: "rgba(221,159,95,0.1)", border: "1px solid rgba(221,159,95,0.2)", color: "#dd9f5f" }}>+</button>
+                <button onClick={() => setMintAmount(Math.min(1000, mintAmount + 1))} className="w-10 h-10 rounded-lg font-bold text-lg flex items-center justify-center transition-all hover:scale-105" style={{ background: "rgba(221,159,95,0.1)", border: "1px solid rgba(221,159,95,0.2)", color: "#dd9f5f" }}>+</button>
               </div>
 
               {/* Quick amounts */}
               <div className="flex gap-2 mt-3">
-                {[5, 10, 25, 50].map((n) => (
+                {[100, 250, 500, 1000].map((n) => (
                   <button key={n} onClick={() => setMintAmount(n)} className="flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all hover:scale-105" style={{
                     background: mintAmount === n ? "linear-gradient(135deg, #dd9f5f, #b87333)" : th.inputBg,
                     border: `1px solid ${mintAmount === n ? "rgba(221,159,95,0.5)" : th.inputBorder}`,
@@ -531,8 +546,12 @@ function BurgerShotMint() {
             {/* Cost breakdown */}
             <div className="rounded-xl p-3 mb-4 text-xs" style={{ background: th.inputBg, border: `1px solid ${th.inputBorder}` }}>
               <div className="flex justify-between mb-1" style={{ color: th.subtext }}>
-                <span>Price per $BSHOT</span>
+                <span>Price per $BGS</span>
                 <span style={{ fontFamily: "'Space Mono', monospace" }}>{BSHOT_PRICE} tBTC</span>
+              </div>
+              <div className="flex justify-between mb-1" style={{ color: th.subtext }}>
+                <span>Max per tx</span>
+                <span style={{ fontFamily: "'Space Mono', monospace", color: "#dd9f5f" }}>1,000 BGS</span>
               </div>
               <div className="flex justify-between mb-1" style={{ color: th.subtext }}>
                 <span>Gas fee (est.)</span>
@@ -606,16 +625,10 @@ function BurgerShotMint() {
                 boxShadow: connected && canAfford && !minting ? "0 0 24px rgba(221,159,95,0.3), 0 4px 16px rgba(0,0,0,0.4)" : "none",
               }}
             >
-              {minting ? (
-                <>
-                  <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-[#1a0e00]" style={{ animation: "spin-slow 0.8s linear infinite" }} />
-                  Minting...
-                </>
-              ) : (
-                <>
-                  🍔 Mint ${mintAmount > 1 ? `${mintAmount} ` : ""}$BSHOT
-                </>
+              {loadingState.minting && (
+                <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-[#1a0e00]" style={{ animation: "spin-slow 0.8s linear infinite" }} />
               )}
+              {getButtonLabel()}
             </button>
           </div>
 
@@ -648,7 +661,7 @@ function BurgerShotMint() {
                 <div className="flex items-center gap-2">
                   <span className="text-base">{toast.type === "success" ? "✅" : "❌"}</span>
                   <span className="text-sm font-bold" style={{ color: toast.type === "success" ? "#4ade80" : "#f87171" }}>
-                    {toast.type === "success" ? "Mint Successful!" : "Transaction Failed"}
+                    {toast.type === "success" ? "ORDER READY! 🍔" : "KITCHEN BUSY! ⚠️"}
                   </span>
                 </div>
                 <button onClick={() => removeToast(toast.id)} className="flex-shrink-0 opacity-40 hover:opacity-100 transition-opacity" style={{ color: th.subtext }}>
@@ -658,8 +671,8 @@ function BurgerShotMint() {
               {/* Body */}
               <p className="text-xs mb-3" style={{ color: th.subtext }}>
                 {toast.type === "success"
-                  ? <>Successfully minted <strong style={{ color: "#dd9f5f" }}>{toast.mintAmt} $BSHOT</strong>. Check your wallet.</>
-                  : "Transaction was rejected. Please try again."}
+                  ? "Your BSHOT burgers have been served to your wallet."
+                  : "The chef is tired or gas is high. Try again!"}
               </p>
               {/* TX ID + countdown — hanya untuk success */}
               {toast.type === "success" && toast.txId && (
@@ -670,7 +683,7 @@ function BurgerShotMint() {
                       href={"https://explorer.opnet.org/tx/" + toast.txId}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 hover:underline"
+                      className="flex items-center gap-1 hover:underline px-2 py-1 rounded-lg transition-all hover:bg-green-400/10"
                       style={{ fontFamily: "'Space Mono', monospace", color: "#4ade80", fontSize: "10px" }}
                     >
                       {toast.txId.slice(0, 8)}...{toast.txId.slice(-6)}
@@ -747,7 +760,7 @@ function BurgerShotMint() {
                   🍔
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] truncate" style={{ fontFamily: "'Space Mono', monospace", color: th.walletText }}>{event.wallet}</p>
+                  <a href={"https://explorer.opnet.org/address/" + event.wallet} target="_blank" rel="noopener noreferrer" className="text-[10px] truncate hover:underline transition-colors duration-200" style={{ fontFamily: "'Space Mono', monospace", color: th.walletText, display: "block" }} onMouseEnter={e => e.target.style.color="#dd9f5f"} onMouseLeave={e => e.target.style.color=th.walletText}>{event.wallet}</a>
                   <p className="text-[11px] font-bold" style={{ color: event.token === "GREASE" ? "#a3e635" : "#dd9f5f" }}>
                     +{event.amount} ${event.token}
                   </p>
@@ -821,5 +834,6 @@ function BurgerShotMint() {
     </div>
   );
 }
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<BurgerShotMint />);
