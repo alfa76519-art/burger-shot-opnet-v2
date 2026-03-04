@@ -51,7 +51,7 @@ The frontend is strictly "Rata Kanan" (Pixel-Perfect). All transaction hashes an
 | React (Babel CDN) | UI Framework |
 | Tailwind CSS | Styling |
 | OPWallet SDK | Wallet Connection |
-| OP_NET | Bitcoin L2 Smart Contracts |
+| OP_NET | Bitcoin L1 Smart Contracts |
 | GitHub Pages | Hosting |
 
 ---
@@ -63,7 +63,7 @@ The frontend is strictly "Rata Kanan" (Pixel-Perfect). All transaction hashes an
 
 2. Switch network to **OPNet Testnet** (green Bitcoin icon top right)
 
-3. Get testnet tBTC from the **Faucet** inside OPWallet
+3. Get testnet tBTC from the **[Faucet](https://faucet.opnet.org/)** inside OPWallet
 
 4. Visit the live demo and click **Connect OPWallet**
 
@@ -120,7 +120,7 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
   - Verified contract address: `opt1sqptc0qu5m4uvp5n0vcr2l2vyjuvh47xu5gxa7n6p`.
 - [x] **Phase 3: Whale Acquisition & Distribution**
   - Successfully minted 21,000,000 BGS to the architect's wallet.
-  - ✅ **Live Transaction Proof**: [View 1 BGS Transfer on OpScan](https://opscan.org/transactions/cfc7a0720d0b919e92091a27f241d8d73de91e64bd3165288859c370a7f21b29)
+  - ✅ **Live Transaction Proof**: [View 1 BGS Transfer on OpScan](https://opscan.org/transactions/32cdcd54b1b878aee677ef22d629523c92a818d01770f3181e4de9f983fc1d61)
 - [ ] **Phase 4: Community & Ecosystem** (Next Step)
   - Exploring integration for digital payments and community.
   - Preparing for Challenge OP_NET.
