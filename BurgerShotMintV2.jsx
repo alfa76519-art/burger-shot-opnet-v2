@@ -244,8 +244,8 @@ function BurgerShotMint() {
         method: "publicMint",
         params: [amountU256.toString()],
       });
-      if (!tx || !tx.hash) throw new Error("Transaction failed");
-      const mockTx = tx.hash;
+      if (!tx) throw new Error("Transaction failed");
+      const mockTx = typeof tx === "string" ? tx : (tx.hash || tx.txid || tx.transactionId || "unknown");
       setLastTxId(mockTx);
       setMintStatus("success");
       setShowConfetti(true);
@@ -680,7 +680,7 @@ function BurgerShotMint() {
                       href={"https://explorer.opnet.org/tx/" + toast.txId}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 hover:underline"
+                      className="flex items-center gap-1 hover:underline px-2 py-1 rounded-lg transition-all hover:bg-green-400/10"
                       style={{ fontFamily: "'Space Mono', monospace", color: "#4ade80", fontSize: "10px" }}
                     >
                       {toast.txId.slice(0, 8)}...{toast.txId.slice(-6)}
@@ -757,7 +757,7 @@ function BurgerShotMint() {
                   🍔
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] truncate" style={{ fontFamily: "'Space Mono', monospace", color: th.walletText }}>{event.wallet}</p>
+                  <a href={"https://explorer.opnet.org/address/" + event.wallet} target="_blank" rel="noopener noreferrer" className="text-[10px] truncate hover:underline transition-colors duration-200" style={{ fontFamily: "'Space Mono', monospace", color: th.walletText, display: "block" }} onMouseEnter={e => e.target.style.color="#dd9f5f"} onMouseLeave={e => e.target.style.color=th.walletText}>{event.wallet}</a>
                   <p className="text-[11px] font-bold" style={{ color: event.token === "GREASE" ? "#a3e635" : "#dd9f5f" }}>
                     +{event.amount} ${event.token}
                   </p>
