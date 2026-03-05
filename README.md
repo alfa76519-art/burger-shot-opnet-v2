@@ -4,6 +4,7 @@
 ![Build](https://img.shields.io/badge/Build-Live-brightgreen?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 ![Wallet](https://img.shields.io/badge/Wallet-OPWallet-purple?style=for-the-badge)
+![Contract](https://img.shields.io/badge/Contract-Deployed-success?style=for-the-badge)
 
 > Serving hot tokens on Bitcoin L1 🍔 — A fast-food themed token launchpad built on OP_NET's Bitcoin smart contract layer.
 
@@ -11,11 +12,11 @@
 
 ---
 
-## 📸 Preview (SOON)
+## 📸 Preview!
 
 | Dark Mode | Light Mode |
 |---|---|
-| ![Dark](https://i.imgur.com/placeholder-dark.png) | ![Light](https://i.imgur.com/placeholder-light.png) |
+| ![Dark](./darkmode.png) | ![Light](./lightmode.png) |
 
 ---
 
@@ -31,6 +32,9 @@
 - 🎬 **Balance Animation** — Smooth count-down animation after mint
 - ⏱️ **TX Countdown** — "Link expires in Xs" progress bar on toast
 - 📱 **Auto wallet detection** — Redirects to install OPWallet if not detected
+- 🍔 **Public Mint** — Anyone can mint BGS tokens via `publicMint` smart contract function
+- 🤖 **AI BOB Widget** — Floating chat popup connected to OP_NET's AI assistant
+- 🔊 **Audio Feedback** — Grill sound on mint click, bell on success
 ## 🚀 Advanced V2 Features 🔥
 
 **1. Fair Launch Public Minting**
@@ -69,16 +73,19 @@ The frontend is strictly "Rata Kanan" (Pixel-Perfect). All transaction hashes an
 
 ---
 
-## 📋 Token Specs
+## 📋 Token Specs — $BGS
 
 | Property | Value |
 |---|---|
-| Name | Burger Shot |
+| Name | BurgerShot |
 | Symbol | $BGS |
-| Network | OP_NET Testnet → Mainnet maybe🤣 |
-| Price per token | 0.001 tBTC |
-| Max supply | 21,000,000 BGS |
-| Max per tx | 1000 BGS |
+| Network | OP_NET Testnet |
+| Contract (hex) | `0x527828de2b1484f50731ed7bcd6bcf8705c875ab3d56f9e1de0e778306a7e65a` |
+| Contract (bech32) | `opt1sqptc0qu5m4uvp5n0vcr2l2vyjuvh47xu5gxa7n6p` |
+| Max Supply | 21,000,000 BGS (18 decimals) |
+| Max per tx | 1,000 BGS |
+| Deployer initial mint | 1,000 BGS |
+| Public Mint | ✅ Open to everyone |
 
 ---
 ---
@@ -103,12 +110,60 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
 
 - [x] Minting UI with real OPWallet connect
 - [x] Live tBTC balance from wallet
-- [x] Toast notification system
-- [x] Real-time mint feed
-- [x] Dark/Light mode
-- [x] Deploy $BSHOT (BGS) smart contract on OP_NET Testnet
-- [x] On-chain mint transactions
-- [ ] Mainnet launch maybe🤣
+- [x] Toast notification system with TX ID + countdown
+- [x] Real-time mint feed with explorer links
+- [x] Dark / Light mode toggle
+- [x] Deploy $BGS smart contract on OP_NET Testnet ✅
+- [x] Public mint function open to all users
+- [x] Correct hex calldata encoding with SHA-256 selector
+- [x] AI BOB floating chat widget
+- [x] Audio feedback (grill + bell sounds)
+- [ ] OPWallet extension bug fix (pending team — Ticket #2155)
+- [ ] On-chain mint transactions confirmed end-to-end
+- [ ] Mainnet launch
+
+## ⚙️ How Minting Works
+
+The DApp calls `signAndBroadcastInteraction` with correctly encoded calldata:
+
+```
+Selector : 5b293f3b  (SHA-256 hash of "publicMint")
+Calldata : 0x5b293f3b + amountU256 (32 bytes big-endian)
+gasLimit : 500000n
+```
+
+Example calldata for 1 BGS:
+```
+0x5b293f3b0000000000000000000000000000000000000000000000000de0b6b3a7640000
+```
+
+---
+
+## ⚠️ Known Issue — OPWallet Extension Bug
+
+> **Contract is deployed and fully functional on OP_NET Testnet.**  
+> UI interaction is currently blocked by a confirmed OPWallet extension bug.
+
+**Bug:** OPWallet popup renders blank/black screen when `signAndBroadcastInteraction` is called from an external DApp.
+
+**Proof — Console log showing valid calldata:**
+```
+Calldata : 0x5b293f3b0000...0de0b6b3a7640000  ✅
+TO       : 0x527828de2b...7e65a               ✅
+TYPE     : string                              ✅
+gasLimit : 500000n                             ✅
+```
+
+**Error inside OPWallet extension (background.js):**
+```
+TypeError: Invalid hex string: odd length
+  at SignInteraction (ui.js:1:2385988)
+```
+
+**Status:** Reported to OP_NET team — Discord Ticket **#2155** 🎫
+
+---
+
 ## 🚀 Roadmap & Achievements🏆
 
 - [x] **Phase 1: Genesis & Architecture**
@@ -130,8 +185,10 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
 
 ```
 burger-shot-opnet-v2/
-├── index.html          ← Entry point + CDN imports
-├── BurgerShotMintV2.jsx ← Main React component
+├── index.html              ← Entry point + Babel/Tailwind CDN
+├── BurgerShotMintV2.jsx    ← Main React component
+├── MyToken.ts              ← OP_NET smart contract (AssemblyScript)
+├── MyToken.wasm            ← Compiled WASM contract
 └── README.md
 ```
 ---
