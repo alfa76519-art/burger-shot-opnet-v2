@@ -1,4 +1,6 @@
-const { useState, useEffect } = React;
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+import { Moon, Sun, Wallet, ShoppingCart, Clock, CheckCircle, ChevronRight, ExternalLink, Menu, X, Bitcoin } from 'lucide-react';
 
 // 🍔 BurgerShot BGS Contract — OP_NET Testnet
 const BGS_CONTRACT_ADDRESS = "0x527828de2b1484f50731ed7bcd6bcf8705c875ab3d56f9e1de0e778306a7e65a";
