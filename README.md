@@ -188,11 +188,11 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
 
 | Tech | Usage |
 |---|---|
-| React (Babel CDN) | UI Framework |
-| Tailwind CSS | Styling |
-| OPWallet SDK | Wallet Connection |
+| React+Vite  | Modern ESM UI Framework |
+| Tailwind CSS | Utility-First Styling |
+| OPWallet SDK | Bitcoin L1 Wallet Integration |
 | OP_NET | Bitcoin L1 Smart Contracts |
-| GitHub Pages | Hosting |
+| GitHub Pages | High-Performance Hosting |
 
 ---
 
@@ -200,7 +200,7 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
 
 ```
 burger-shot-opnet-v2/
-├── index.html              ← Entry point + Babel/Tailwind CDN
+├── index.html              ← Entry point (Vite optimized)
 ├── BurgerShotMintV2.jsx    ← Main React component
 ├── MyToken.ts              ← OP_NET smart contract (AssemblyScript)
 ├── MyToken.wasm            ← Compiled WASM contract
@@ -208,7 +208,7 @@ burger-shot-opnet-v2/
 ```
 ---
 ### 🎯 Architect's Note for Vibecode Judges
-BurgerShot V2 is not just a token; it's a demonstration of how smooth and interactive Bitcoin's Layer-1 can be when powered by OP_NET. From the gas-optimized SafeMath logic in the AssemblyScript contract to the Babel-compiled reactive frontend, every line of code is heavily polished for the best User Experience. 
+BurgerShot V2 is not just a token; it's a demonstration of how smooth and interactive Bitcoin's Layer-1 can be when powered by OP_NET. From the gas-optimized SafeMath logic in the AssemblyScript contract to the Vite-powered reactive frontend, every line of code is heavily polished for a high-performance User Experience. 🚀
 
 *Enjoy your meal, and happy minting! 🍔😋*
 ---
