@@ -20,6 +20,20 @@
 
 ---
 
+## 🏆 Ecosystem Contributions & Bug Hunter Status 🛠️
+
+> **"A Great Architect doesn't just build; they fix the foundation."**
+
+Beyond developing BurgerShot V2, I am actively contributing to the **OP_NET** core ecosystem:
+
+* **🛡️ Bug Hunter:** Identified and documented a critical UI rendering bug in the **OPWallet Extension** (`signAndBroadcastInteraction` blank screen).
+    * **Official Report:** [Discord Ticket #2155 🎫]
+* **🔧 Ecosystem Fix:** Submitted **[Pull Request #15](https://github.com/btc-vision/contract-logo/pull/15)** to the official `btc-vision/contract-logo` repository. 
+    * **Impact:** Resolved the global "Logo 404" issue affecting contract assets across the network.
+* **✅ Current Status:** BurgerShot V2 smart contract is **100% Verified & Functional** on-chain. Frontend is ready for the community as soon as the wallet patch is live.
+
+---
+
 ## ✨ Features
 
 - 🔌 **Real OPWallet Integration** — Connect/disconnect with live tBTC balance from wallet
@@ -35,6 +49,9 @@
 - 🍔 **Public Mint** — Anyone can mint BGS tokens via `publicMint` smart contract function
 - 🤖 **AI BOB Widget** — Floating chat popup connected to OP_NET's AI assistant
 - 🔊 **Audio Feedback** — Grill sound on mint click, bell on success
+
+---
+
 ## 🚀 Advanced V2 Features 🔥
 
 **1. Fair Launch Public Minting**
@@ -45,31 +62,6 @@ Unlike standard tokens, BurgerShot includes a professional `airdrop` function bu
 
 **3. Interactive On-Chain UX**
 The frontend is strictly "Rata Kanan" (Pixel-Perfect). All transaction hashes and wallet addresses in the UI are fully clickable and directly integrated with the **OP_NET Explorer**, providing real-time on-chain transparency.
-
----
-
-## 🛠️ Tech Stack
-
-| Tech | Usage |
-|---|---|
-| React (Babel CDN) | UI Framework |
-| Tailwind CSS | Styling |
-| OPWallet SDK | Wallet Connection |
-| OP_NET | Bitcoin L1 Smart Contracts |
-| GitHub Pages | Hosting |
-
----
-
-## 🔌 Wallet Setup
-
-1. Install **OPWallet** from Chrome Web Store:
-   👉 [Install OPWallet](https://chromewebstore.google.com/detail/opwallet/pmbjpcmaaladnfpacpmhmnfmpklgbdjb)
-
-2. Switch network to **OPNet Testnet** (green Bitcoin icon top right)
-
-3. Get testnet tBTC from the **[Faucet](https://faucet.opnet.org/)** inside OPWallet
-
-4. Visit the live demo and click **Connect OPWallet**
 
 ---
 
@@ -88,6 +80,58 @@ The frontend is strictly "Rata Kanan" (Pixel-Perfect). All transaction hashes an
 | Public Mint | ✅ Open to everyone |
 
 ---
+
+## 🔌 Wallet Setup
+
+1. Install **OPWallet** from Chrome Web Store:
+   👉 [Install OPWallet](https://chromewebstore.google.com/detail/opwallet/pmbjpcmaaladnfpacpmhmnfmpklgbdjb)
+
+2. Switch network to **OPNet Testnet** (green Bitcoin icon top right)
+
+3. Get testnet tBTC from the **[Faucet](https://faucet.opnet.org/)** inside OPWallet
+
+4. Visit the live demo and click **Connect OPWallet**
+
+---
+
+## ⚠️ Known Issue — OPWallet Extension Bug
+
+> **Contract is deployed and fully functional on OP_NET Testnet.**  
+> UI interaction is currently blocked by a confirmed OPWallet extension bug.
+
+**Bug:** OPWallet popup renders blank/black screen when `signAndBroadcastInteraction` is called from an external DApp.
+
+**Proof — Console log showing valid calldata:**
+```
+Calldata : 0x5b293f3b0000...0de0b6b3a7640000  ✅
+TO       : 0x527828de2b...7e65a               ✅
+TYPE     : string                              ✅
+gasLimit : 500000n                             ✅
+```
+
+**Error inside OPWallet extension (background.js):**
+```
+TypeError: Invalid hex string: odd length
+  at SignInteraction (ui.js:1:2385988)
+```
+
+**Status:** Reported to OP_NET team — Discord Ticket **#2155** 🎫
+
+## ⚙️ How Minting Works
+
+The DApp calls `signAndBroadcastInteraction` with correctly encoded calldata:
+
+```
+Selector : 5b293f3b  (SHA-256 hash of "publicMint")
+Calldata : 0x5b293f3b + amountU256 (32 bytes big-endian)
+gasLimit : 500000n
+```
+
+Example calldata for 1 BGS:
+```
+0x5b293f3b0000000000000000000000000000000000000000000000000de0b6b3a7640000
+```
+
 ---
 
 ## 🍔 Featured Project: BurgerShot (BGS)
@@ -122,48 +166,6 @@ I successfully architected and deployed **BurgerShot (BGS)**, a tribute to Bitco
 - [ ] On-chain mint transactions confirmed end-to-end
 - [ ] Mainnet launch
 
-## ⚙️ How Minting Works
-
-The DApp calls `signAndBroadcastInteraction` with correctly encoded calldata:
-
-```
-Selector : 5b293f3b  (SHA-256 hash of "publicMint")
-Calldata : 0x5b293f3b + amountU256 (32 bytes big-endian)
-gasLimit : 500000n
-```
-
-Example calldata for 1 BGS:
-```
-0x5b293f3b0000000000000000000000000000000000000000000000000de0b6b3a7640000
-```
-
----
-
-## ⚠️ Known Issue — OPWallet Extension Bug
-
-> **Contract is deployed and fully functional on OP_NET Testnet.**  
-> UI interaction is currently blocked by a confirmed OPWallet extension bug.
-
-**Bug:** OPWallet popup renders blank/black screen when `signAndBroadcastInteraction` is called from an external DApp.
-
-**Proof — Console log showing valid calldata:**
-```
-Calldata : 0x5b293f3b0000...0de0b6b3a7640000  ✅
-TO       : 0x527828de2b...7e65a               ✅
-TYPE     : string                              ✅
-gasLimit : 500000n                             ✅
-```
-
-**Error inside OPWallet extension (background.js):**
-```
-TypeError: Invalid hex string: odd length
-  at SignInteraction (ui.js:1:2385988)
-```
-
-**Status:** Reported to OP_NET team — Discord Ticket **#2155** 🎫
-
----
-
 ## 🚀 Roadmap & Achievements🏆
 
 - [x] **Phase 1: Genesis & Architecture**
@@ -179,6 +181,19 @@ TypeError: Invalid hex string: odd length
 - [ ] **Phase 4: Community & Ecosystem** (Next Step)
   - Exploring integration for digital payments and community.
   - Preparing for Challenge OP_NET.
+
+---
+
+## 🛠️ Tech Stack
+
+| Tech | Usage |
+|---|---|
+| React (Babel CDN) | UI Framework |
+| Tailwind CSS | Styling |
+| OPWallet SDK | Wallet Connection |
+| OP_NET | Bitcoin L1 Smart Contracts |
+| GitHub Pages | Hosting |
+
 ---
 
 ## 🏗️ Project Structure
