@@ -249,18 +249,34 @@ function BurgerShotMint() {
 
       console.log("TX response:", tx);
       if (!tx) throw new Error("Transaction failed — no response from wallet");
-      const realTx = typeof tx === "string" ? tx : (tx.hash || tx.txid || tx.transactionId || tx.result || "unknown");
-      setLastTxId(realTx);
+
+      // --- FILTER SAKTI GUGEL START ---
+      // Kita cegah si ACK_KEEP_ALIVE masuk ke state dApps
+      let realTx = null;
+      const rawTx = typeof tx === "string" ? tx : (tx.hash || tx.txid || tx.transactionId || tx.result);
+
+      if (rawTx && typeof rawTx === 'string' && rawTx.startsWith('0x')) {
+          realTx = rawTx; // Cuma simpan kalau formatnya Hash Hex asli
+      }
+      // --- FILTER SAKTI GUGEL END ---
+
+      setLastTxId(realTx || ""); 
       setMintStatus("success");
       setShowConfetti(true);
       addSelfToFeed(mintAmount);
       playSound(bellAudio);
+
+      // Kirim data steril ke Toast—kalau realTx null, link explorer otomatis hilang
       addToast({ type: "success", mintAmt: mintAmount, txId: realTx, duration: 8000 });
+
       const newBalance = parseFloat((rBTCBalance - parseFloat(totalCost)).toFixed(5));
       animateBalance(rBTCBalance, Math.max(0, newBalance));
+      
       setTimeout(() => setShowConfetti(false), 5000);
       setTimeout(() => { setMintStatus(null); setLastTxId(""); }, 8000);
+
     } catch (err) {
+      console.error("Mint Error:", err);
       setMintStatus("error");
       addToast({ type: "error", duration: 3500 });
       setTimeout(() => setMintStatus(null), 3500);
