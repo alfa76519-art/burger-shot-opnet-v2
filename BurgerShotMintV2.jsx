@@ -42,10 +42,23 @@ function BurgerShotMint() {
   const [showBob, setShowBob] = useState(false); // 🤖 AI BOB chat popup
 
   const addToast = (toast) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, ...toast }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), toast.duration || 5000);
-  };
+  const id = Date.now();
+  
+  // --- FILTER SAKTI GUGEL START ---
+  let validatedTxId = toast.txId;
+  
+  // Cek kalau txId bukan Hash asli (gak diawali 0x)
+  if (toast.txId && (typeof toast.txId !== 'string' || !toast.txId.startsWith('0x'))) {
+    validatedTxId = null; // Buang pesan sampah ACK_KEEP_ALIVE
+  }
+  // --- FILTER SAKTI GUGEL END ---
+
+  setToasts((prev) => [...prev, { id, ...toast, txId: validatedTxId }]);
+  
+  setTimeout(() => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, toast.duration || 5000);
+};
   const removeToast = (id) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   const [isDark, setIsDark] = useState(true);
