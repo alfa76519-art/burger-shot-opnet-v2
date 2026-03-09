@@ -5,14 +5,14 @@ import { Moon, Sun, Wallet, ShoppingCart, Clock, CheckCircle, ChevronRight, Exte
 // 🍔 BurgerShot BGS Contract — OP_NET Testnet
 const BGS_CONTRACT_ADDRESS = "0x527828de2b1484f50731ed7bcd6bcf8705c875ab3d56f9e1de0e778306a7e65a";
 const OPNET_RPC = "https://testnet.opnet.org";
-const BSHOT_PRICE = 0.001;
+const BSHOT_PRICE = 0.0001;
 
 // 🔊 Audio setup
 const grillAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-grillAudio.volume = 0.4;
+grillAudio.volume = 0.7;
 grillAudio.preload = "auto";
 const bellAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/931/931-preview.mp3");
-bellAudio.volume = 0.4;
+bellAudio.volume = 0.7;
 bellAudio.preload = "auto";
 
 const playSound = (audio) => {
@@ -115,7 +115,7 @@ function BurgerShotMint() {
   }, []);
 
   const handleMaxClick = () => {
-    const reserveForGas = 0.0001;
+    const reserveForGas = 0.00005;
     const availableBalance = Math.max(0, rBTCBalance - reserveForGas);
     const maxBSHOT = Math.floor(availableBalance / BSHOT_PRICE);
     setMintAmount(Math.min(1000, Math.max(1, maxBSHOT)));
